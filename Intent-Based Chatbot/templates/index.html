@@ -21,6 +21,13 @@
     </div>
 
     <script>
+      const input = document.getElementById("userInput");
+
+      input.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+          sendMessage();
+        }
+      });
       function sendMessage() {
         const input = document.getElementById("userInput");
         const message = input.value.trim();
@@ -46,3 +53,4 @@
     </script>
   </body>
 </html>
+
