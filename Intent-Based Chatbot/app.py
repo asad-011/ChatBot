@@ -3,6 +3,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from datetime import datetime
 import re
+import random
 
 app = Flask(__name__)
 
@@ -102,13 +103,66 @@ model.fit(X, training_labels)
 
 
 responses = {
-    "greeting": "Hello! How can I help you? ",
-    "status": "I'm doing great! Thanks for asking.",
-    "name": "I am an efficient NLP chatbot built using Flask and Python.",
-    "joke": "Why do programmers prefer dark mode? Because light attracts bugs ",
-    "help": "I can chat, tell the time/date, and crack jokes!",
-    "bye": "Goodbye! Have a great day "
+    "greeting": [
+        "Hello! How can I help you? 😊",
+        "Hi there! 👋",
+        "Hey! Nice to see you.",
+        "Greetings! What can I do for you?",
+        "Hello! I'm here to assist you."
+    ],
+
+    "status": [
+        "I'm doing great! Thanks for asking 😊",
+        "All good here! How about you?",
+        "I'm fine and ready to help!",
+        "Doing well 👍"
+    ],
+
+    "name": [
+        "I am an NLP chatbot built using Flask and Python 🤖",
+        "You can call me your virtual assistant!",
+        "I'm a simple AI chatbot here to help you.",
+        "I don't have a name, but I'm always available for you."
+    ],
+
+    "joke": [
+        "Why do programmers prefer dark mode? Because light attracts bugs 😂",
+        "Why did the computer go to the doctor? It caught a virus 😄",
+        "Why was the math book sad? Too many problems 😆",
+        "I told my computer I needed a break… it froze 😜"
+    ],
+
+    "help": [
+        "I can chat with you, tell the time/date, and crack jokes!",
+        "I can answer basic questions and keep you entertained 😊",
+        "Try asking me about time, date, jokes, or greetings.",
+        "I'm here to assist you however I can!"
+    ],
+
+    "bye": [
+        "Goodbye! Have a great day 👋",
+        "See you later!",
+        "Bye! Take care 😊",
+        "Hope to chat again soon!",
+        "Farewell! 👋"
+    ],
+
+    "thanks": [
+        "You're welcome! 😊",
+        "No problem at all!",
+        "Happy to help 👍",
+        "Anytime!"
+    ],
+
+    "confirmation": [
+        "Okay 👍",
+        "Got it ✅",
+        "Sure!",
+        "Alright!",
+        "Confirmed!"
+    ]
 }
+
 
 
 @app.route("/")
@@ -127,7 +181,7 @@ def chat():
         intent = model.predict(X_test)[0]
         confidence = model.predict_proba(X_test).max()
 
-        if confidence < 0.35:
+        if confidence < 0.15:
             return jsonify({"reply": "Sorry, I didn't understand that. Can you rephrase?"})
         
         if intent == "time":
@@ -135,7 +189,7 @@ def chat():
         elif intent == "date":
             reply = datetime.now().strftime("%d-%m-%Y")
         else:
-            reply = responses.get(intent, "I'm not sure how to answer that.")
+            reply = random.choice(responses.get(intent, ["I'm not sure how to answer that."]))
 
         return jsonify({"reply": reply})
 
